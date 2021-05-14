@@ -1,21 +1,18 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import { TaskStatus } from '../task.model';
+import { isIn } from 'class-validator';
+import { TaskStatus } from '../task-status.enum';
 
 @Injectable()
 export class TaskStatusValidationPipe implements PipeTransform {
   transform(value: any) {
     value = value?.toUpperCase();
-    if (!this.isValidStatus(value)) {
-      throw new BadRequestException(`Invalid status "${value}"`);
+    if (!isIn(value, Object.values(TaskStatus))) {
+      throw new BadRequestException(
+        `Invalid status "${value}", not in [${Object.values(TaskStatus).join(
+          '|',
+        )}]`,
+      );
     }
     return value;
   }
-  private isValidStatus(status: any): boolean {
-    return this.validStatuses.indexOf(status) !== -1;
-  }
-  private readonly validStatuses = [
-    TaskStatus.DONE,
-    TaskStatus.IN_PROGRESS,
-    TaskStatus.OPEN,
-  ];
 }
