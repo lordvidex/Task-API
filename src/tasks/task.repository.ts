@@ -8,7 +8,7 @@ export class TaskRepository extends Repository<Task> {
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     const { title, description } = createTaskDto;
     // create the task
-    const task: Task = Task.create();
+    const task: Task = this.create();
     task.title = title;
     task.description = description;
     return await task.save();
@@ -21,9 +21,12 @@ export class TaskRepository extends Repository<Task> {
       query.where('task.status = :status', { status });
     }
     if (search) {
-      query.where('task.title LIKE :search OR task.description LIKE :search', {
-        search: `%${search}%`,
-      });
+      query.andWhere(
+        '(task.title LIKE :search OR task.description LIKE :search)',
+        {
+          search: `%${search}%`,
+        },
+      );
     }
     return await query.getMany();
   }
