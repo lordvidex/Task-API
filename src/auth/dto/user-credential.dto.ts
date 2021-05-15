@@ -2,7 +2,7 @@ import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class UserCredentialDto {
   @IsString()
-  username: string;
+  readonly username: string;
 
   @IsString()
   @MinLength(6)
@@ -10,5 +10,5 @@ export class UserCredentialDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message: 'Weak password',
   })
-  password: string;
+  readonly password: string;
 }

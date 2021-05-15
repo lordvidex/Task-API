@@ -1,4 +1,4 @@
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 import {
   BaseEntity,
   Column,
@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Task extends BaseEntity {
@@ -26,5 +27,6 @@ export class Task extends BaseEntity {
   userId: number;
 
   @ManyToOne(() => User, (user: User) => user.tasks, { eager: false })
+  @ApiHideProperty()
   user: User;
 }

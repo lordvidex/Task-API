@@ -19,10 +19,13 @@ import { Task } from './task.entity';
 import { TaskStatus } from './task-status.enum';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.entity';
+import { GetUser } from '../auth/get-user.decorator';
+import { User } from '../auth/user.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('tasks')
+@ApiBearerAuth()
+@ApiTags('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
   constructor(private tasksService: TasksService) {}
