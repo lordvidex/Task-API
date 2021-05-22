@@ -14,4 +14,9 @@ export class AuthController {
   async logIn(@Body(ValidationPipe) userCredentialDto: UserCredentialDto) {
     return await this.authService.logIn(userCredentialDto);
   }
+
+  @Post('/token')
+  async checkValidToken(@Body('access_token') token: string) {
+    return await this.authService.tokenIsValid(token);
+  }
 }

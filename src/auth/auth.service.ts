@@ -31,4 +31,13 @@ export class AuthService {
     const payload: JwtPayload = { username: user.username, id: user.id };
     return { access_token: this.jwtService.sign(payload) };
   }
+
+  async tokenIsValid(token: string) {
+    try {
+      const result = this.jwtService.verify(token);
+      return result;
+    } catch (e) {
+      return { error: e.message };
+    }
+  }
 }

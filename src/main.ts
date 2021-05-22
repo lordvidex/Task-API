@@ -1,19 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as config from 'config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  const config = new DocumentBuilder()
+  const PORT = process.env.PORT || config.get('server.port');
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('Task API')
     .setDescription('Secure API for saving and retrieving your tasks')
-    .addServer('http://localhost:3000')
+    .addServer(`http://localhost:${PORT}`)
     .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
-
-  await app.listen(3000);
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors();
+  }
+  await app.listen(PORT, () => console.log(`Running on PORT ${PORT}`));
 }
 bootstrap();

@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { Constants } from '../constants';
+import * as config from 'config';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
@@ -16,7 +16,7 @@ export class AuthStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: Constants.jwtPrivateKey,
+      secretOrKey: config.get('jwt.secretKey'),
     });
   }
   async validate(jwtPayload: JwtPayload): Promise<User> {

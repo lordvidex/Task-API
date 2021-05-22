@@ -1,0 +1,16 @@
+{
+    "server": {
+        "port": 3000
+    },
+    "db": {
+        "type": "postgres",
+        "database": "my_database",
+        "port": 5432,
+        "username": "username",
+        "password": "password"
+    },
+    "jwt": {
+        "secretKey": "secretKey",
+        "expiresIn": 3600
+    }
+}
