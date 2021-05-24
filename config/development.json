@@ -13,6 +13,6 @@
     },
     "jwt": {
         "secretKey": "taskManagerSecret519",
-        "expiresIn": 3600
+        "expiresIn": 18000
     }
 }
