@@ -5,7 +5,8 @@ import * as config from 'config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const PORT = process.env.PORT || config.get('server.port');
+  const serverConfig: any = config.get('server');
+  const PORT = process.env.PORT || serverConfig.port;
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Task API')
     .setDescription('Secure API for saving and retrieving your tasks')
@@ -14,9 +15,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
-  if (process.env.NODE_ENV === 'development') {
-    app.enableCors();
-  }
+  app.enableCors();
+  console.log(`Node environment is ${process.env.NODE_ENV}`);
+  console.log(`Granting access from ${serverConfig.origin}`);
   await app.listen(PORT, () => console.log(`Running on PORT ${PORT}`));
 }
 bootstrap();

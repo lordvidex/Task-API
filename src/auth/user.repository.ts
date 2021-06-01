@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { UserCredentialDto } from './dto/user-credential.dto';
 import { User } from './user.entity';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import {
   BadRequestException,
   ConflictException,
@@ -10,9 +10,15 @@ import {
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
+  /**
+   *
+   * @param userCredentialDto UserCredentials containing username and password
+   * @returns user data without the password from the db
+   */
   async signUp(userCredentialDto: UserCredentialDto) {
     const { username, password } = userCredentialDto;
     const user: User = new User();
+
     // set the username
     user.username = username;
     // generate a salt
@@ -20,6 +26,7 @@ export class UserRepository extends Repository<User> {
     user.password = await this.hashPassword(password, salt);
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = await user.save();
       return result;
     } catch (error) {
@@ -30,6 +37,11 @@ export class UserRepository extends Repository<User> {
     }
   }
 
+  /**
+   * tries to login user with provided data
+   * @param userCredentialDto username and password
+   * @returns user data if successful
+   */
   async logIn(userCredentialDto: UserCredentialDto): Promise<User> {
     const { username, password } = userCredentialDto;
     const user = await this.findOne({ username });
